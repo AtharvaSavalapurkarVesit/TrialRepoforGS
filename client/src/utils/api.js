@@ -1,48 +1,31 @@
-import axios from 'axios';
+import config from '../config/config';
 
-const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || '',
-  timeout: 15000, // 15 seconds
-});
+export const API = {
+  get: (endpoint) => fetch(`${config.backendUrl}${endpoint}`),
+  post: (endpoint, data) => fetch(`${config.backendUrl}${endpoint}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  }),
+  // Add other methods as needed
+};
 
-// Request interceptor to add auth token to every request
-api.interceptors.request.use(
-  (config) => {
-    // Get token from localStorage
-    const token = localStorage.getItem('token');
-    
-    // If token exists, add it to headers
-    if (token) {
-      config.headers['x-auth-token'] = token;
-    }
-    
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
+// Example usage in any component
+import { API } from '../utils/api';
+import config from '../config/config';
+
+// Using the API utility
+const fetchData = async () => {
+  try {
+    const response = await API.get('/api/items');
+    const data = await response.json();
+    // Handle data
+  } catch (error) {
+    console.error('Error:', error);
   }
-);
+};
 
-// Response interceptor to handle common errors
-api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    // Handle 401 Unauthorized errors
-    if (error.response && error.response.status === 401) {
-      console.error('Authentication error:', error.response.data);
-      
-      // Only redirect if we're not already on the login page
-      if (!window.location.pathname.includes('/login')) {
-        // Clear token and redirect to login
-        localStorage.removeItem('token');
-        window.location.href = '/login';
-      }
-    }
-    
-    return Promise.reject(error);
-  }
-);
-
-export default api; 
+// Direct URL access if needed
+console.log('Backend URL:', config.backendUrl);

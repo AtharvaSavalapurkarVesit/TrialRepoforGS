@@ -1,11 +1,12 @@
 {
-  "name": "garagesale",
+  "name": "garage-sale-app",
   "version": "1.0.0",
   "description": "A marketplace for engineering students to buy and sell academic items",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "cd server && npm start",
+    "start": "node server/server.js",
+    "build": "cd client && npm install && npm run build",
+    "server": "cd server && npm run dev",
     "client": "cd client && npm start",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "install-all": "npm install && cd client && npm install && cd ../server && npm install"
@@ -18,7 +19,7 @@
   ],
   "author": "Aarya Rane & Parth Chavan",
   "license": "MIT",
-  "devDependencies": {
-    "concurrently": "^9.1.2"
+  "dependencies": {
+    "concurrently": "^8.0.1"
   }
 }
